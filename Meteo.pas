@@ -7,15 +7,6 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls;
 
-  type
-   TDataBytes = record
-      Command : byte;
-      Value1 : byte;
-      Value2 : byte;
-      Value3 : byte;
-      Value4 : byte;
-   end;
-
 type
   TForm1 = class(TForm)
     Button1: TButton;
@@ -39,18 +30,10 @@ type
     procedure Execute; override;
   end;
 
-  TMyReadThread = class(TThread)
-    private
-    { Private declarations }
-  protected
-    procedure Execute; override;
-  end;
-
 var
   Form1: TForm1;
 
   MyThread: TMyThread;
-  MyReadThread: TMyReadThread;
 
   ComHandle:THandle;
   CurrentState:TComStat;
@@ -61,8 +44,6 @@ var
 
   Buffer :PCommConfig;
   Size: DWORD;
-
-  DataBytes : TDataBytes;
 
 implementation
 
@@ -90,15 +71,9 @@ begin
       ReadFile(ComHandle,PData^,AvaibleBytes,RealRead,nil);
       Form1.Memo1.Lines.Add(FloatToStr((DATA[1]*256 + DATA[0])/16)) ;
     end;
-
-    //Form1.Memo1.Lines.Add(IntToStr(DATA[0]) +' '+IntToStr(DATA[1])) ;
-
     sleep(500);
   end;
-
-
-
-  end;
+end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var i:integer;
@@ -141,17 +116,6 @@ begin
 
  Memo1.Lines.Add('OK');
 
-end;
-
-procedure TMyReadThread.Execute;
-var    sysTime:TDateTime;
-begin
-   while  true do
-   begin
-
-   if MyReadThread.Terminated then break;
-   sleep(500);
-  end;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
